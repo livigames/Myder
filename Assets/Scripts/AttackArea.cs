@@ -7,6 +7,7 @@ public class AttackArea : MonoBehaviour
     [SerializeField] private float distance;
     [SerializeField] private Transform attackPoint;
     [SerializeField] private LayerMask attackable;
+    [SerializeField] private float knockbackForce;
 
     private CameraShake cameraShake;
 
@@ -30,7 +31,7 @@ public class AttackArea : MonoBehaviour
     {
 
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(0))
         {
             AttackArean();
         }
@@ -48,6 +49,15 @@ public class AttackArea : MonoBehaviour
             {
                 enemyHealt.TakeDamage(20);
 
+                Rigidbody2D enemyRigidbody = GameObject.Find("Enemy").GetComponent<Rigidbody2D>();
+            if (enemyRigidbody != null)
+            {
+                // Knockback kuvvetini uygulamak için düþmanýn yönünü belirleyin
+                Vector2 knockbackDirection = (enemyRigidbody.transform.position - attackPoint.position).normalized;
+
+                // Düþmana knockback kuvvetini uygulayýn
+                enemyRigidbody.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
+            }
             }
             cameraShake.Shake();
         }
